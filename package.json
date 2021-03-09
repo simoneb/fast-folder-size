@@ -15,7 +15,9 @@
     "folder",
     "size"
   ],
-  "repository": "https://github.com/simoneb/fast-folder-size.git",
+  "repository": {
+    "url": "https://github.com/simoneb/fast-folder-size.git"
+  },
   "license": "ISC",
   "dependencies": {
     "eslint": "^7.21.0",
