@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Node CLI or module to calculate folder size",
   "main": "index.js",
-  "bin": "index.js",
+  "bin": {
+    "fast-folder-size": "index.js"
+  },
   "author": "Simone Busoli <simone.busoli@gmail.com>",
   "scripts": {
     "postinstall": "node get-sysinternals-du.js"
