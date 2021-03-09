@@ -1,5 +1,7 @@
 # fast-folder-size
 
+[![ci](https://github.com/simoneb/fast-folder-size/actions/workflows/ci.yml/badge.svg)](https://github.com/simoneb/fast-folder-size/actions/workflows/ci.yml)
+
 Node CLI or module to calculate folder size.
 
 It uses:
