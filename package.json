@@ -8,6 +8,7 @@
   },
   "author": "Simone Busoli <simone.busoli@gmail.com>",
   "scripts": {
+    "test": "node test",
     "postinstall": "node get-sysinternals-du.js"
   },
   "keywords": [
@@ -20,7 +21,9 @@
   },
   "license": "ISC",
   "dependencies": {
-    "eslint": "^7.21.0",
     "unzipper": "^0.10.11"
+  },
+  "devDependencies": {
+    "eslint": "^7.21.0"
   }
 }

@@ -16,7 +16,7 @@ function fastFolderSize(target, cb) {
         if (err) return cb(err)
 
         const match = /Size:\s+(.+) bytes/.exec(stdout)
-        const bytes = match[1].replace(/\./g, '')
+        const bytes = Number(match[1].replace(/\./g, ''))
 
         cb(null, bytes)
       }
