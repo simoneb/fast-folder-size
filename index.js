@@ -8,7 +8,12 @@ function fastFolderSize(target, cb) {
   // windows
   if (process.platform === 'win32') {
     return exec(
-      `${path.join('bin','du.exe')} -nobanner -accepteula ${target}`, (err, stdout) => {
+      `"${path.join(
+        __dirname,
+        'bin',
+        'du.exe'
+      )}" -nobanner -accepteula ${target}`,
+      (err, stdout) => {
         if (err) return cb(err)
 
         const match = /Size:\s+(.+) bytes/.exec(stdout)
