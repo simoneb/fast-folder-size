@@ -24,13 +24,26 @@ function fastFolderSize(target, cb) {
     )
   }
 
-  // other platforms
-  exec(`du -s ${target}`, (err, stdout) => {
+  // mac
+  if (process.platform === 'darwin') {
+    return exec(`du -sk ${target}`, (err, stdout) => {
+      if (err) return cb(err)
+
+      const match = /^(\d+)/.exec(stdout)
+
+      const bytes = Number(match[1]) * 1024
+
+      cb(null, bytes)
+    })
+  }
+
+  // others
+  return exec(`du -sb ${target}`, (err, stdout) => {
     if (err) return cb(err)
 
     const match = /^(\d+)/.exec(stdout)
 
-    const bytes = Number(match[1]) * 1024
+    const bytes = Number(match[1])
 
     cb(null, bytes)
   })
