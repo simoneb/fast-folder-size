@@ -12,7 +12,7 @@ function fastFolderSize(target, cb) {
         __dirname,
         'bin',
         'du.exe'
-      )}" -nobanner -accepteula ${target}`,
+      )}" -nobanner -accepteula .`, {cwd: target},
       (err, stdout) => {
         if (err) return cb(err)
 
@@ -26,7 +26,7 @@ function fastFolderSize(target, cb) {
 
   // mac
   if (process.platform === 'darwin') {
-    return exec(`du -sk ${target}`, (err, stdout) => {
+    return exec(`du -sk .`, {cwd: target}, (err, stdout) => {
       if (err) return cb(err)
 
       const match = /^(\d+)/.exec(stdout)
@@ -38,7 +38,7 @@ function fastFolderSize(target, cb) {
   }
 
   // others
-  return exec(`du -sb ${target}`, (err, stdout) => {
+  return exec(`du -sb .`, {cwd: target}, (err, stdout) => {
     if (err) return cb(err)
 
     const match = /^(\d+)/.exec(stdout)
