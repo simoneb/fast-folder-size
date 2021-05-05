@@ -10,7 +10,7 @@
   "scripts": {
     "test": "tap",
     "postinstall": "node get-sysinternals-du.js",
-    "lint": "eslint"
+    "lint": "eslint ."
   },
   "keywords": [
     "fast",
@@ -26,6 +26,9 @@
   },
   "devDependencies": {
     "eslint": "^7.21.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "prettier": "^2.2.1",
     "tap": "^15.0.1"
   }
 }
