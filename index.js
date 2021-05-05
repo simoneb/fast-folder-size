@@ -14,7 +14,7 @@ function fastFolderSize(target, cb) {
         if (err) return cb(err)
 
         // query stats indexes from the end since path can contain commas as well
-        const stats = stdout.split("\n")[1].split(",")
+        const stats = stdout.split('\n')[1].split(',')
 
         cb(null, +stats.slice(-2)[0])
       }
