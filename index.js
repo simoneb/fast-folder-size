@@ -8,15 +8,15 @@ function fastFolderSize(target, cb) {
   // windows
   if (process.platform === 'win32') {
     return exec(
-      `"${path.join(__dirname, 'bin', 'du.exe')}" -nobanner -accepteula .`,
+      `"${path.join(__dirname, 'bin', 'du.exe')}" -nobanner -accepteula -q -c .`,
       { cwd: target },
       (err, stdout) => {
         if (err) return cb(err)
 
-        const match = /Size:\s+(.+) bytes/.exec(stdout)
-        const bytes = Number(match[1].replace(/\.|,/g, ''))
+        // query stats indexes from the end since path can contain commas as well
+        const stats = stdout.split('\n')[1].split(',')
 
-        cb(null, bytes)
+        cb(null, +stats.slice(-2)[0])
       }
     )
   }
