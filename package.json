@@ -9,7 +9,8 @@
   "author": "Simone Busoli <simone.busoli@gmail.com>",
   "scripts": {
     "test": "tap",
-    "postinstall": "node get-sysinternals-du.js"
+    "postinstall": "node get-sysinternals-du.js",
+    "lint": "eslint"
   },
   "keywords": [
     "fast",
