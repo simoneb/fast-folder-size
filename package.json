@@ -1,6 +1,6 @@
 {
   "name": "fast-folder-size",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Node CLI or module to calculate folder size",
   "main": "index.js",
   "bin": {
