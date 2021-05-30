@@ -1,8 +1,8 @@
-import { ChildProcess } from 'child_process'
+import { ExecException, ChildProcess } from 'child_process'
 
 declare function fastFolderSize(
   path: string,
-  callback: (err: Error, bytes: number) => void
+  callback: (err: ExecException | null, bytes?: number) => void
 ): ChildProcess
 
 export = fastFolderSize
