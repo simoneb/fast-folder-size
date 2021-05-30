@@ -6,6 +6,7 @@
   "bin": {
     "fast-folder-size": "index.js"
   },
+  "types": "types/index.d.ts",
   "author": "Simone Busoli <simone.busoli@gmail.com>",
   "scripts": {
     "test": "tap",
