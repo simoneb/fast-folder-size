@@ -9,7 +9,7 @@
   "types": "types/index.d.ts",
   "author": "Simone Busoli <simone.busoli@gmail.com>",
   "scripts": {
-    "test": "tap",
+    "test": "tap && tsd",
     "postinstall": "node get-sysinternals-du.js",
     "lint": "eslint ."
   },
