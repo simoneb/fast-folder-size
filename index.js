@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 'use strict'
 
 const path = require('path')
@@ -51,13 +50,3 @@ function fastFolderSize(target, cb) {
 }
 
 module.exports = fastFolderSize
-
-if (require.main === module) {
-  fastFolderSize(process.argv.slice(2)[0], (err, bytes) => {
-    if (err) {
-      throw err
-    }
-
-    console.log(bytes)
-  })
-}
