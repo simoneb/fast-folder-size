@@ -22,6 +22,7 @@ npm i fast-folder-size
 ```js
 const { promisify } = require('util')
 const fastFolderSize = require('fast-folder-size')
+const fastFolderSizeSync = require('fast-folder-size/sync')
 
 // callback
 fastFolderSize('.', (err, bytes) => {
