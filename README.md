@@ -38,6 +38,11 @@ const fastFolderSizeAsync = promisify(fastFolderSize)
 const bytes = await fastFolderSizeAsync('.')
 
 console.log(bytes)
+
+// sync
+const bytes = fastFolderSizeSync('.')
+
+console.log(bytes)
 ```
 
 ### Command line
