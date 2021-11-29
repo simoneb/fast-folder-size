@@ -8,6 +8,6 @@ declare function fastFolderSize(
 export = fastFolderSize
 
 declare module 'fast-folder-size/sync' {
-  function fastFolderSize(path: string): number
-  export = fastFolderSize
+  function fastFolderSizeSync(path: string): number | undefined
+  export = fastFolderSizeSync
 }
