@@ -30,14 +30,10 @@ test('folder size is correct', t => {
 })
 
 test('sync: folder size is larger than 0', t => {
-  try {
-    const bytes = fastFolderSizeSync('.')
-    t.ok(Number.isFinite(bytes))
-    t.ok(bytes > 0)
-    t.end()
-  } catch (err) {
-    t.error(err)
-  }
+  const bytes = fastFolderSizeSync('.')
+  t.ok(Number.isFinite(bytes))
+  t.ok(bytes > 0)
+  t.end()
 })
 
 test('sync: folder size is correct', t => {
@@ -47,13 +43,9 @@ test('sync: folder size is correct', t => {
     whatever: crypto.randomBytes(writtenBytes),
   })
 
-  try {
-    const bytes = fastFolderSizeSync(testdirName)
-    console.log('real size:', writtenBytes, 'found size:', bytes)
-    t.ok(bytes >= writtenBytes)
-    t.ok(bytes <= writtenBytes * 1.5)
-    t.end()
-  } catch (err) {
-    t.error(err)
-  }
+  const bytes = fastFolderSizeSync(testdirName)
+  console.log('real size:', writtenBytes, 'found size:', bytes)
+  t.ok(bytes >= writtenBytes)
+  t.ok(bytes <= writtenBytes * 1.5)
+  t.end()
 })
