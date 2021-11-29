@@ -6,3 +6,8 @@ declare function fastFolderSize(
 ): ChildProcess
 
 export = fastFolderSize
+
+declare module 'fast-folder-size/sync' {
+  function fastFolderSize(path: string): number
+  export = fastFolderSize
+}
