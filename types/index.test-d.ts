@@ -1,7 +1,7 @@
 import { expectType } from 'tsd'
 import { ExecException, ChildProcess } from 'child_process'
 import fastFolderSize from '.'
-import fastFolderSizeSync from 'fast-folder-size/sync'
+import fastFolderSizeSync from './sync'
 
 expectType<ChildProcess>(
   fastFolderSize('.', (err, bytes) => {
