@@ -7,8 +7,8 @@ function fastFolderSize(target) {
   const command = commands[process.platform] || commands['linux']
   const stdout = execSync(command, { cwd: target })
 
-  const process = processOutput[process.platform] || processOutput['linux']
-  const bytes = process(stdout)
+  const processFn = processOutput[process.platform] || processOutput['linux']
+  const bytes = processFn(stdout)
 
   return bytes
 }

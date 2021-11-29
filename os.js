@@ -2,7 +2,11 @@ const path = require('path')
 
 const commands = {
   // windows
-  win32: `"${path.join(__dirname, 'bin', 'du.exe')}" -nobanner -accepteula -q -c .`,
+  win32: `"${path.join(
+    __dirname,
+    'bin',
+    'du.exe'
+  )}" -nobanner -accepteula -q -c .`,
 
   // macos
   darwin: `du -sk .`,

@@ -6,18 +6,14 @@ const { commands, processOutput } = require('./os.js')
 function fastFolderSize(target, cb) {
   const command = commands[process.platform] || commands['linux']
 
-  return exec(
-    command,
-    { cwd: target },
-    (err, stdout) => {
-      if (err) return cb(err)
+  return exec(command, { cwd: target }, (err, stdout) => {
+    if (err) return cb(err)
 
-      const process = processOutput[process.platform] || processOutput['linux']
-      const bytes = process(stdout)
+    const processFn = processOutput[process.platform] || processOutput['linux']
+    const bytes = processFn(stdout)
 
-      cb(null, bytes)
-    }
-  )
+    cb(null, bytes)
+  })
 }
 
 module.exports = fastFolderSize
