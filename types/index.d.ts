@@ -1,4 +1,5 @@
 import { ExecException, ChildProcess } from 'child_process'
+import fastFolderSizeSync from './sync'
 
 declare function fastFolderSize(
   path: string,
@@ -8,6 +9,5 @@ declare function fastFolderSize(
 export = fastFolderSize
 
 declare module 'fast-folder-size/sync' {
-  function fastFolderSizeSync(path: string): number | undefined
   export = fastFolderSizeSync
 }
