@@ -1,3 +1,5 @@
+> The license of this software has changed to AWISC - Anti War ISC License
+
 # fast-folder-size
 
 [![ci](https://github.com/simoneb/fast-folder-size/actions/workflows/ci.yml/badge.svg)](https://github.com/simoneb/fast-folder-size/actions/workflows/ci.yml)
