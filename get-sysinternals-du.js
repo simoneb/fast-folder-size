@@ -4,7 +4,7 @@ const unzipper = require('unzipper')
 
 // Only run for Windows
 if (process.platform !== 'win32') {
-  process.exit()
+  process.exit(0)
 }
 
 https.get('https://download.sysinternals.com/files/DU.zip', function (res) {
