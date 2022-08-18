@@ -21,7 +21,7 @@
   "repository": {
     "url": "https://github.com/simoneb/fast-folder-size.git"
   },
-  "license": "ISC",
+  "license": "AWISC",
   "dependencies": {
     "unzipper": "^0.10.11"
   },
