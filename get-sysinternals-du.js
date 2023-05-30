@@ -1,9 +1,15 @@
+const fs = require('fs')
 const https = require('https')
 const path = require('path')
 const unzipper = require('unzipper')
 
 // Only run for Windows
 if (process.platform !== 'win32') {
+  process.exit(0)
+}
+
+// check if du is already installed
+if (fs.existsSync(path.join(__dirname, 'bin', 'du.exe'))) {
   process.exit(0)
 }
 
@@ -27,6 +33,9 @@ if (proxy) {
 
 https.get(
   {
+    host: options.host,
+    port: options.port,
+    hostname: options.hostname,
     path: duZipLocation,
     agent: new https.Agent(options),
   },
