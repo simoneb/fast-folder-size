@@ -32,6 +32,6 @@
     "eslint-plugin-prettier": "^3.4.0",
     "prettier": "^2.2.1",
     "tap": "^15.0.1",
-    "tsd": "^0.16.0"
+    "tsd": "^0.28.1"
   }
 }
