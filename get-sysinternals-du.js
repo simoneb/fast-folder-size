@@ -31,7 +31,7 @@ const agent = new https.Agent({
     host: proxyOptions.hostname,
     port: proxyOptions.port || 8080,
     protocol: proxyOptions.protocol,
-    auth: proxyOptions.auth
+    auth: proxyOptions.auth,
   },
 })
 
@@ -39,9 +39,6 @@ if (proxyAddress) {
   https.globalAgent = agent
 }
 
-https.get(
-  duZipLocation,
-  function (res) {
-    res.pipe(unzipper.Extract({ path: path.join(__dirname, 'bin') }))
-  }
-)
+https.get(duZipLocation, function (res) {
+  res.pipe(unzipper.Extract({ path: path.join(__dirname, 'bin') }))
+})
