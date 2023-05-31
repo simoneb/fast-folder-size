@@ -1,6 +1,8 @@
+const fs = require('fs')
+const os = require('os')
 const https = require('https')
 const path = require('path')
-const unzipper = require('unzipper')
+const decompress = require('decompress')
 
 // Only run for Windows
 if (process.platform !== 'win32') {
@@ -12,5 +14,13 @@ const duZipLocation =
   'https://download.sysinternals.com/files/DU.zip'
 
 https.get(duZipLocation, function (res) {
-  res.pipe(unzipper.Extract({ path: path.join(__dirname, 'bin') }))
+  const tempFilePath = path.join(os.tmpdir(), 'du.zip')
+
+  const fileStream = fs.createWriteStream(tempFilePath)
+  res.pipe(fileStream)
+
+  fileStream.on('finish', function () {
+    fileStream.close()
+    decompress(tempFilePath, path.join(__dirname, 'bin'))
+  })
 })

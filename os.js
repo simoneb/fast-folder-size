@@ -5,7 +5,7 @@ const commands = {
   win32: `"${path.join(
     __dirname,
     'bin',
-    'du.exe'
+    `du${process.arch === 'x64' ? '64' : ''}.exe`
   )}" -nobanner -accepteula -q -c .`,
 
   // macos
