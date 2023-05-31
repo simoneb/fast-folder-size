@@ -18,27 +18,29 @@ const duZipLocation =
   'https://download.sysinternals.com/files/DU.zip'
 
 // checks for proxy variables in user environment
-const proxy =
+const proxyAddress =
   process.env.HTTPS_PROXY ||
   process.env.https_proxy ||
   process.env.HTTP_PROXY ||
   process.env.http_proxy
 
-let options = {}
+const proxyOptions = new URL(proxyAddress)
 
-if (proxy) {
-  options = new URL(proxy)
-  options.rejectUnauthorized = false
+const agent = new https.Agent({
+  proxy: {
+    host: proxyOptions.hostname,
+    port: proxyOptions.port || 8080,
+    protocol: proxyOptions.protocol,
+    auth: proxyOptions.auth
+  },
+})
+
+if (proxyAddress) {
+  https.globalAgent = agent
 }
 
 https.get(
-  {
-    host: options.host,
-    port: options.port,
-    hostname: options.hostname,
-    path: duZipLocation,
-    agent: new https.Agent(options),
-  },
+  duZipLocation,
   function (res) {
     res.pipe(unzipper.Extract({ path: path.join(__dirname, 'bin') }))
   }
