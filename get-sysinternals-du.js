@@ -1,7 +1,8 @@
 const fs = require('fs')
+const os = require('os')
 const https = require('https')
 const path = require('path')
-const unzipper = require('unzipper')
+const decompress = require('decompress')
 
 // Only run for Windows
 if (process.platform !== 'win32') {
@@ -9,7 +10,11 @@ if (process.platform !== 'win32') {
 }
 
 // check if du is already installed
-if (fs.existsSync(path.join(__dirname, 'bin', 'du.exe'))) {
+if (
+  fs.existsSync(
+    path.join(__dirname, 'bin', `du${process.arch === 'x64' ? '64' : ''}.exe`)
+  )
+) {
   process.exit(0)
 }
 
@@ -24,21 +29,28 @@ const proxyAddress =
   process.env.HTTP_PROXY ||
   process.env.http_proxy
 
-const proxyOptions = new URL(proxyAddress)
-
-const agent = new https.Agent({
-  proxy: {
-    host: proxyOptions.hostname,
-    port: proxyOptions.port || 8080,
-    protocol: proxyOptions.protocol,
-    auth: proxyOptions.auth,
-  },
-})
-
 if (proxyAddress) {
+  const proxyOptions = new URL(proxyAddress)
+  const agent = new https.Agent({
+    proxy: {
+      host: proxyOptions.hostname,
+      port: proxyOptions.port || 8080,
+      protocol: proxyOptions.protocol,
+      auth: proxyOptions.auth,
+    },
+  })
+
   https.globalAgent = agent
 }
 
 https.get(duZipLocation, function (res) {
-  res.pipe(unzipper.Extract({ path: path.join(__dirname, 'bin') }))
+  const tempFilePath = path.join(os.tmpdir(), 'du.zip')
+
+  const fileStream = fs.createWriteStream(tempFilePath)
+  res.pipe(fileStream)
+
+  fileStream.on('finish', function () {
+    fileStream.close()
+    decompress(tempFilePath, path.join(__dirname, 'bin'))
+  })
 })
