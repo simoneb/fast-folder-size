@@ -23,7 +23,8 @@
   },
   "license": "AWISC",
   "dependencies": {
-    "decompress": "^4.2.1"
+    "decompress": "^4.2.1",
+    "https-proxy-agent": "^7.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.2.5",

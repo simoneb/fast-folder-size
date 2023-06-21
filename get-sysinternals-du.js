@@ -3,6 +3,7 @@ const os = require('os')
 const https = require('https')
 const path = require('path')
 const decompress = require('decompress')
+const { HttpsProxyAgent } = require('https-proxy-agent')
 
 // Only run for Windows
 if (process.platform !== 'win32') {
@@ -30,15 +31,7 @@ const proxyAddress =
   process.env.http_proxy
 
 if (proxyAddress) {
-  const proxyOptions = new URL(proxyAddress)
-  const agent = new https.Agent({
-    proxy: {
-      host: proxyOptions.hostname,
-      port: proxyOptions.port || 8080,
-      protocol: proxyOptions.protocol,
-      auth: proxyOptions.auth,
-    },
-  })
+  const agent = new HttpsProxyAgent(proxyAddress)
 
   https.globalAgent = agent
 }
