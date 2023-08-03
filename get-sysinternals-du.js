@@ -5,19 +5,31 @@ const path = require('path')
 const decompress = require('decompress')
 const { HttpsProxyAgent } = require('https-proxy-agent')
 
+exports.workspace = __dirname
+
+exports.onDuZipDownloaded = function (tempFilePath) {
+  decompress(tempFilePath, path.join(exports.workspace, 'bin'))
+}
+
 exports.default = function () {
   // Only run for Windows
   if (process.platform !== 'win32') {
     process.exit(0)
+    return
   }
 
   // check if du is already installed
   if (
     fs.existsSync(
-      path.join(__dirname, 'bin', `du${process.arch === 'x64' ? '64' : ''}.exe`)
+      path.join(
+        exports.workspace,
+        'bin',
+        `du${process.arch === 'x64' ? '64' : ''}.exe`
+      )
     )
   ) {
     process.exit(0)
+    return
   }
 
   const duZipLocation =
@@ -32,10 +44,10 @@ exports.default = function () {
     process.env.http_proxy
 
   if (proxyAddress) {
-    const agent = new HttpsProxyAgent(proxyAddress)
-
-    https.globalAgent = agent
+    https.globalAgent = new HttpsProxyAgent(proxyAddress)
   }
+
+  console.log(`downloading du.zip from ${duZipLocation}`)
 
   https.get(duZipLocation, function (res) {
     const tempFilePath = path.join(os.tmpdir(), 'du.zip')
@@ -45,7 +57,7 @@ exports.default = function () {
 
     fileStream.on('finish', function () {
       fileStream.close()
-      decompress(tempFilePath, path.join(__dirname, 'bin'))
+      exports.onDuZipDownloaded(tempFilePath)
     })
   })
 }
