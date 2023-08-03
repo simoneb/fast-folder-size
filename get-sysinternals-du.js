@@ -11,27 +11,7 @@ exports.onDuZipDownloaded = function (tempFilePath) {
   decompress(tempFilePath, path.join(exports.workspace, 'bin'))
 }
 
-exports.default = function () {
-  // Only run for Windows
-  if (process.platform !== 'win32') {
-    process.exit(0)
-    return
-  }
-
-  // check if du is already installed
-  if (
-    fs.existsSync(
-      path.join(
-        exports.workspace,
-        'bin',
-        `du${process.arch === 'x64' ? '64' : ''}.exe`
-      )
-    )
-  ) {
-    process.exit(0)
-    return
-  }
-
+exports.downloadDuZip = function () {
   const duZipLocation =
     process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION ||
     'https://download.sysinternals.com/files/DU.zip'
@@ -60,6 +40,41 @@ exports.default = function () {
       exports.onDuZipDownloaded(tempFilePath)
     })
   })
+}
+
+exports.onDuBinCopied = function (filename, src, dest) {
+  console.log(`${filename} copied from ${src} to ${dest}`)
+}
+
+exports.default = function () {
+  // Only run for Windows
+  if (process.platform !== 'win32') {
+    return
+  }
+
+  // check if du is already installed
+  let duBinFilename = `du${process.arch === 'x64' ? '64' : ''}.exe`
+  let envDuBinPath = process.env.FAST_FOLDER_SIZE_DU_BIN
+  let defaultDuBinPath = path.join(exports.workspace, 'bin', duBinFilename)
+
+  if (fs.existsSync(defaultDuBinPath)) {
+    return
+  } else {
+    console.log(`${duBinFilename} not found at ${defaultDuBinPath}`)
+
+    if (fs.existsSync(envDuBinPath)) {
+      fs.mkdirSync(path.dirname(defaultDuBinPath))
+      fs.copyFileSync(envDuBinPath, defaultDuBinPath)
+      exports.onDuBinCopied(duBinFilename, envDuBinPath, defaultDuBinPath)
+      return
+    }
+
+    console.log(
+      `${duBinFilename} not found at process.env.FAST_FOLDER_SIZE_DU_BIN`
+    )
+  }
+
+  exports.downloadDuZip()
 }
 
 // only auto execute default() function when its invoked directly
