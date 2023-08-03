@@ -12,9 +12,9 @@ exports.onDuZipDownloaded = function (tempFilePath) {
 }
 
 exports.downloadDuZip = function () {
+  let mirror = process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION
   const duZipLocation =
-    process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION ||
-    'https://download.sysinternals.com/files/DU.zip'
+    mirror || 'https://download.sysinternals.com/files/DU.zip'
 
   // checks for proxy variables in user environment
   const proxyAddress =
@@ -28,6 +28,11 @@ exports.downloadDuZip = function () {
   }
 
   console.log(`downloading du.zip from ${duZipLocation}`)
+  if (!mirror) {
+    console.log(
+      `if you have trouble while downloading, try set process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION to a proper mirror`
+    )
+  }
 
   https.get(duZipLocation, function (res) {
     const tempFilePath = path.join(os.tmpdir(), 'du.zip')
