@@ -58,19 +58,17 @@ fast-folder-size .
 
 By default the Sysinternals DU.zip is downloaded from https://download.sysinternals.com/files/DU.zip.
 
-If you need to change this, e.g. to download from an internal package repository,
-set the **FAST_FOLDER_SIZE_DU_ZIP_LOCATION** environment variable. For example:
+If you need to change this, e.g. to download from an internal package repository
+or re-use an existing du.zip, you can set the **FAST_FOLDER_SIZE_DU_ZIP_LOCATION** environment variable.
 
-```shell
-export FAST_FOLDER_SIZE_DU_ZIP_LOCATION=https://your.internal.repository/DU.zip
-```
-
-### Reuse an existing du binary
-
-In case you want to reuse an existing du binary locally,
-you can set the **FAST_FOLDER_SIZE_DU_BIN** environment variable.
 For example:
 
 ```shell
-export FAST_FOLDER_SIZE_DU_BIN="C://Users/Admin/AppData/Local/Sysinternals DU/du64.exe"
+export FAST_FOLDER_SIZE_DU_ZIP_LOCATION="https://your.internal.repository/DU.zip"
+```
+
+or
+
+```shell
+export FAST_FOLDER_SIZE_DU_ZIP_LOCATION="D://download/du.zip"
 ```
