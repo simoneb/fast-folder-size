@@ -3,46 +3,57 @@ const path = require('path')
 const os = require('os')
 const fs = require('fs')
 const subject = require('./get-sysinternals-du.js')
-const { randomUUID } = require('crypto')
 
+let workspace = path.join(os.tmpdir(), 'fast-folder-size-playground')
 beforeEach(() => {
-  let workspace = path.join(os.tmpdir(), 'fast-folder-size-playground')
   if (fs.existsSync(workspace)) fs.rmSync(workspace, { recursive: true })
   fs.mkdirSync(workspace)
   subject.workspace = workspace
 })
 
-test('it cannot use local file path as process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION', t => {
-  let dummyDuZipPath = path.join(os.tmpdir(), 'dummy-du.zip')
-  let data = ''
-  fs.writeFileSync(`${dummyDuZipPath}`, data)
+test('it can use local file path as process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION', t => {
+  let dummyDuZipPath = path.join(workspace, 'dummy-du.zip')
+  fs.writeFileSync(dummyDuZipPath, '')
   process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION = dummyDuZipPath
 
-  t.throws(subject.default, e => {
-    return (
-      e.code === 'ERR_INVALID_PROTOCOL' &&
-      e.message.match('Protocol ".*:" not supported. Expected "https:"')
-    )
+  subject.onDuZipDownloaded = function (tempFilePath) {
+    t.equal(dummyDuZipPath, tempFilePath)
+    t.end()
+  }
+
+  subject.default()
+})
+test('it cannot use non-exists local file path as process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION', t => {
+  process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION = path.join(
+    workspace,
+    'non-exists-dummy-du.zip'
+  )
+
+  t.throws(subject.default, error => {
+    return error.message.startsWith('du.zip not found at')
   })
   t.end()
 })
 
-test('it can re-use local du.exe from process.env.FAST_FOLDER_SIZE_DU_BIN', t => {
-  let dummyDuBinPath = path.join(os.tmpdir(), 'dummy-du.exe')
-  let data = randomUUID().toString()
-  fs.writeFileSync(`${dummyDuBinPath}`, data)
-  process.env.FAST_FOLDER_SIZE_DU_BIN = dummyDuBinPath
+test('it can use http(s) url as process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION', t => {
+  let dummyUrl = 'https://non-exists.localhost/du.zip'
+  process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION = dummyUrl
 
-  subject.downloadDuZip = function () {
-    t.fail('it should re-use an existing du bin instead of download a zip')
-  }
-
-  let origin = subject.onDuBinCopied
-  subject.onDuBinCopied = function (filename, src, dest) {
-    origin(filename, src, dest)
-    t.equal(fs.readFileSync(dest).toString(), data)
+  subject.downloadDuZip = function (mirror) {
+    t.equal(dummyUrl, mirror)
+    t.end()
   }
 
   subject.default()
-  t.end()
+})
+
+test('when process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION not found, then download it directly', t => {
+  delete process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION
+
+  subject.downloadDuZip = function (mirror) {
+    t.equal(undefined, mirror)
+    t.end()
+  }
+
+  subject.default()
 })

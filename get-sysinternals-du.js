@@ -11,8 +11,7 @@ exports.onDuZipDownloaded = function (tempFilePath) {
   decompress(tempFilePath, path.join(exports.workspace, 'bin'))
 }
 
-exports.downloadDuZip = function () {
-  let mirror = process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION
+exports.downloadDuZip = function (mirror) {
   const duZipLocation =
     mirror || 'https://download.sysinternals.com/files/DU.zip'
 
@@ -30,7 +29,7 @@ exports.downloadDuZip = function () {
   console.log(`downloading du.zip from ${duZipLocation}`)
   if (!mirror) {
     console.log(
-      `if you have trouble while downloading, try set process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION to a proper mirror`
+      `if you have trouble while downloading, try set process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION to a proper mirror or local file path`
     )
   }
 
@@ -47,10 +46,6 @@ exports.downloadDuZip = function () {
   })
 }
 
-exports.onDuBinCopied = function (filename, src, dest) {
-  console.log(`${filename} copied from ${src} to ${dest}`)
-}
-
 exports.default = function () {
   // Only run for Windows
   if (process.platform !== 'win32') {
@@ -59,27 +54,30 @@ exports.default = function () {
 
   // check if du is already installed
   let duBinFilename = `du${process.arch === 'x64' ? '64' : ''}.exe`
-  let envDuBinPath = process.env.FAST_FOLDER_SIZE_DU_BIN
   let defaultDuBinPath = path.join(exports.workspace, 'bin', duBinFilename)
 
   if (fs.existsSync(defaultDuBinPath)) {
+    console.log(`${duBinFilename} found at ${defaultDuBinPath}`)
     return
   } else {
     console.log(`${duBinFilename} not found at ${defaultDuBinPath}`)
-
-    if (fs.existsSync(envDuBinPath)) {
-      fs.mkdirSync(path.dirname(defaultDuBinPath))
-      fs.copyFileSync(envDuBinPath, defaultDuBinPath)
-      exports.onDuBinCopied(duBinFilename, envDuBinPath, defaultDuBinPath)
-      return
-    }
-
-    console.log(
-      `${duBinFilename} not found at process.env.FAST_FOLDER_SIZE_DU_BIN`
-    )
   }
 
-  exports.downloadDuZip()
+  let mirrorOrCache = process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION
+
+  if (
+    !mirrorOrCache ||
+    mirrorOrCache.startsWith('http://') ||
+    mirrorOrCache.startsWith('https://')
+  ) {
+    exports.downloadDuZip(mirrorOrCache)
+  } else if (fs.existsSync(mirrorOrCache)) {
+    exports.onDuZipDownloaded(mirrorOrCache)
+  } else {
+    let message = `du.zip not found at ${mirrorOrCache}`
+    // this will result the process to exit with code 1
+    throw Error(message)
+  }
 }
 
 // only auto execute default() function when its invoked directly
