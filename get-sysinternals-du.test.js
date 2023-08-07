@@ -1,3 +1,8 @@
+if (process.platform !== 'win32') {
+  // these test cases are only for win32
+  return
+}
+
 const { test, beforeEach } = require('tap')
 const path = require('path')
 const os = require('os')
