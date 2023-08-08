@@ -9,7 +9,7 @@ exports.onDuZipDownloaded = function (tempFilePath, workspace) {
   decompress(tempFilePath, path.join(workspace, 'bin'))
 }
 
-exports.downloadDuZip = function (mirror) {
+exports.downloadDuZip = function (mirror, workspace) {
   const duZipLocation =
     mirror || 'https://download.sysinternals.com/files/DU.zip'
 
@@ -39,7 +39,7 @@ exports.downloadDuZip = function (mirror) {
 
     fileStream.on('finish', function () {
       fileStream.close()
-      exports.onDuZipDownloaded(tempFilePath)
+      exports.onDuZipDownloaded(tempFilePath, workspace)
     })
   })
 }
@@ -67,12 +67,12 @@ exports.default = function (workspace) {
     mirrorOrCache.startsWith('http://') ||
     mirrorOrCache.startsWith('https://')
   ) {
-    exports.downloadDuZip(mirrorOrCache)
+    exports.downloadDuZip(mirrorOrCache, workspace)
     return
   }
 
   if (fs.existsSync(mirrorOrCache)) {
-    exports.onDuZipDownloaded(mirrorOrCache)
+    exports.onDuZipDownloaded(mirrorOrCache, workspace)
     return
   }
 
