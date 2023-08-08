@@ -23,7 +23,7 @@ test('it can use local file path as process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION
     process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION = dummyDuZipPath
 
     subject.onDuZipDownloaded = function (tempFilePath) {
-      t.equal(dummyDuZipPath, tempFilePath)
+      t.equal(tempFilePath, dummyDuZipPath)
       t.end()
     }
 
@@ -39,7 +39,7 @@ test('it can use local file path as process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION
     process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION = dummyDuZipPath
 
     subject.onDuZipDownloaded = function (tempFilePath) {
-      t.equal(dummyDuZipPath, tempFilePath)
+      t.equal(tempFilePath, dummyDuZipPath)
       t.end()
     }
 
@@ -66,7 +66,7 @@ test('it can use http(s) url as process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION', t
   process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION = dummyUrl
 
   subject.downloadDuZip = function (mirror) {
-    t.equal(dummyUrl, mirror)
+    t.equal(mirror, dummyUrl)
     t.end()
   }
 
@@ -77,7 +77,7 @@ test('when process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION not found, then download
   delete process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION
 
   subject.downloadDuZip = function (mirror) {
-    t.equal(undefined, mirror)
+    t.equal(mirror, undefined)
     t.end()
   }
 
