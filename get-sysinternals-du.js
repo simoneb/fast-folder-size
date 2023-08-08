@@ -53,8 +53,8 @@ exports.default = function () {
   }
 
   // check if du is already installed
-  let duBinFilename = `du${process.arch === 'x64' ? '64' : ''}.exe`
-  let defaultDuBinPath = path.join(exports.workspace, 'bin', duBinFilename)
+  const duBinFilename = `du${process.arch === 'x64' ? '64' : ''}.exe`
+  const defaultDuBinPath = path.join(exports.workspace, 'bin', duBinFilename)
 
   if (fs.existsSync(defaultDuBinPath)) {
     console.log(`${duBinFilename} found at ${defaultDuBinPath}`)
@@ -63,7 +63,7 @@ exports.default = function () {
     console.log(`${duBinFilename} not found at ${defaultDuBinPath}`)
   }
 
-  let mirrorOrCache = process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION
+  const mirrorOrCache = process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION
 
   if (
     !mirrorOrCache ||
@@ -74,7 +74,7 @@ exports.default = function () {
   } else if (fs.existsSync(mirrorOrCache)) {
     exports.onDuZipDownloaded(mirrorOrCache)
   } else {
-    let message = `du.zip not found at ${mirrorOrCache}`
+    const message = `du.zip not found at ${mirrorOrCache}`
     // this will result the process to exit with code 1
     throw Error(message)
   }

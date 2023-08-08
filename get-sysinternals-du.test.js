@@ -9,7 +9,7 @@ const os = require('os')
 const fs = require('fs')
 const subject = require('./get-sysinternals-du.js')
 
-let workspace = path.join(os.tmpdir(), 'fast-folder-size-playground')
+const workspace = path.join(os.tmpdir(), 'fast-folder-size-playground')
 beforeEach(() => {
   if (fs.existsSync(workspace)) fs.rmSync(workspace, { recursive: true })
   fs.mkdirSync(workspace)
@@ -18,7 +18,7 @@ beforeEach(() => {
 
 test('it can use local file path as process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION', t => {
   t.test('C:\\**\\du.zip', t => {
-    let dummyDuZipPath = path.join(workspace, 'dummy-du.zip')
+    const dummyDuZipPath = path.join(workspace, 'dummy-du.zip')
     fs.writeFileSync(dummyDuZipPath, '')
     process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION = dummyDuZipPath
 
@@ -31,7 +31,7 @@ test('it can use local file path as process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION
   })
 
   t.test('C://**/du.zip', t => {
-    let dummyDuZipPath = path
+    const dummyDuZipPath = path
       .join(workspace, 'dummy-du.zip')
       .replaceAll('\\', '/')
       .replace(':/', '://')
@@ -62,7 +62,7 @@ test('it cannot use non-exists local file path as process.env.FAST_FOLDER_SIZE_D
 })
 
 test('it can use http(s) url as process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION', t => {
-  let dummyUrl = 'https://non-exists.localhost/du.zip'
+  const dummyUrl = 'https://non-exists.localhost/du.zip'
   process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION = dummyUrl
 
   subject.downloadDuZip = function (mirror) {
