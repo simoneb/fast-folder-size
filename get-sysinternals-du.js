@@ -57,9 +57,8 @@ exports.default = function (workspace) {
   if (fs.existsSync(defaultDuBinPath)) {
     console.log(`${duBinFilename} found at ${defaultDuBinPath}`)
     return
-  } else {
-    console.log(`${duBinFilename} not found at ${defaultDuBinPath}`)
   }
+  console.log(`${duBinFilename} not found at ${defaultDuBinPath}`)
 
   const mirrorOrCache = process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION
 
@@ -69,13 +68,17 @@ exports.default = function (workspace) {
     mirrorOrCache.startsWith('https://')
   ) {
     exports.downloadDuZip(mirrorOrCache)
-  } else if (fs.existsSync(mirrorOrCache)) {
-    exports.onDuZipDownloaded(mirrorOrCache)
-  } else {
-    const message = `du.zip not found at ${mirrorOrCache}`
-    // this will result the process to exit with code 1
-    throw Error(message)
+    return
   }
+
+  if (fs.existsSync(mirrorOrCache)) {
+    exports.onDuZipDownloaded(mirrorOrCache)
+    return
+  }
+
+  const message = `du.zip not found at ${mirrorOrCache}`
+  // this will result the process to exit with code 1
+  throw Error(message)
 }
 
 // only auto execute default() function when its invoked directly
