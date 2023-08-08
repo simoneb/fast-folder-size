@@ -16,34 +16,39 @@ beforeEach(() => {
   subject.workspace = workspace
 })
 
-test('it can use local file path C:\\**\\du.zip as process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION', t => {
-  let dummyDuZipPath = path.join(workspace, 'dummy-du.zip')
-  fs.writeFileSync(dummyDuZipPath, '')
-  process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION = dummyDuZipPath
+test('it can use local file path as process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION', t => {
+  t.test('C:\\**\\du.zip', t => {
+    let dummyDuZipPath = path.join(workspace, 'dummy-du.zip')
+    fs.writeFileSync(dummyDuZipPath, '')
+    process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION = dummyDuZipPath
 
-  subject.onDuZipDownloaded = function (tempFilePath) {
-    t.equal(dummyDuZipPath, tempFilePath)
-    t.end()
-  }
+    subject.onDuZipDownloaded = function (tempFilePath) {
+      t.equal(dummyDuZipPath, tempFilePath)
+      t.end()
+    }
 
-  subject.default()
+    subject.default()
+  })
+
+  t.test('C://**/du.zip', t => {
+    let dummyDuZipPath = path
+      .join(workspace, 'dummy-du.zip')
+      .replaceAll('\\', '/')
+      .replace(':/', '://')
+    fs.writeFileSync(dummyDuZipPath, '')
+    process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION = dummyDuZipPath
+
+    subject.onDuZipDownloaded = function (tempFilePath) {
+      t.equal(dummyDuZipPath, tempFilePath)
+      t.end()
+    }
+
+    subject.default()
+  })
+
+  t.end()
 })
 
-test('it can use local file path C://**/du.zip as process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION', t => {
-  let dummyDuZipPath = path
-    .join(workspace, 'dummy-du.zip')
-    .replaceAll('\\', '/')
-    .replace(':/', '://')
-  fs.writeFileSync(dummyDuZipPath, '')
-  process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION = dummyDuZipPath
-
-  subject.onDuZipDownloaded = function (tempFilePath) {
-    t.equal(dummyDuZipPath, tempFilePath)
-    t.end()
-  }
-
-  subject.default()
-})
 test('it cannot use non-exists local file path as process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION', t => {
   process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION = path.join(
     workspace,
