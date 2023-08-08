@@ -5,10 +5,8 @@ const path = require('path')
 const decompress = require('decompress')
 const { HttpsProxyAgent } = require('https-proxy-agent')
 
-exports.workspace = __dirname
-
-exports.onDuZipDownloaded = function (tempFilePath) {
-  decompress(tempFilePath, path.join(exports.workspace, 'bin'))
+exports.onDuZipDownloaded = function (tempFilePath, workspace) {
+  decompress(tempFilePath, path.join(workspace, 'bin'))
 }
 
 exports.downloadDuZip = function (mirror) {
@@ -46,7 +44,7 @@ exports.downloadDuZip = function (mirror) {
   })
 }
 
-exports.default = function () {
+exports.default = function (workspace) {
   // Only run for Windows
   if (process.platform !== 'win32') {
     return
@@ -54,7 +52,7 @@ exports.default = function () {
 
   // check if du is already installed
   const duBinFilename = `du${process.arch === 'x64' ? '64' : ''}.exe`
-  const defaultDuBinPath = path.join(exports.workspace, 'bin', duBinFilename)
+  const defaultDuBinPath = path.join(workspace, 'bin', duBinFilename)
 
   if (fs.existsSync(defaultDuBinPath)) {
     console.log(`${duBinFilename} found at ${defaultDuBinPath}`)
@@ -82,5 +80,5 @@ exports.default = function () {
 
 // only auto execute default() function when its invoked directly
 if (require.main === module) {
-  exports.default()
+  exports.default(__dirname)
 }

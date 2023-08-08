@@ -13,7 +13,6 @@ const workspace = path.join(os.tmpdir(), 'fast-folder-size-playground')
 beforeEach(() => {
   if (fs.existsSync(workspace)) fs.rmSync(workspace, { recursive: true })
   fs.mkdirSync(workspace)
-  subject.workspace = workspace
 })
 
 test('it can use local file path as process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION', t => {
@@ -27,7 +26,7 @@ test('it can use local file path as process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION
       t.end()
     }
 
-    subject.default()
+    subject.default(workspace)
   })
 
   t.test('C://**/du.zip', t => {
@@ -43,7 +42,7 @@ test('it can use local file path as process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION
       t.end()
     }
 
-    subject.default()
+    subject.default(workspace)
   })
 
   t.end()
@@ -55,9 +54,13 @@ test('it cannot use non-exists local file path as process.env.FAST_FOLDER_SIZE_D
     'non-exists-dummy-du.zip'
   )
 
-  t.throws(subject.default, error => {
-    return error.message.startsWith('du.zip not found at')
-  })
+  t.throws(
+    () => subject.default(workspace),
+    error => {
+      return error.message.startsWith('du.zip not found at')
+    }
+  )
+
   t.end()
 })
 
@@ -70,7 +73,7 @@ test('it can use http(s) url as process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION', t
     t.end()
   }
 
-  subject.default()
+  subject.default(workspace)
 })
 
 test('when process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION not found, then download it directly', t => {
@@ -81,5 +84,5 @@ test('when process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION not found, then download
     t.end()
   }
 
-  subject.default()
+  subject.default(workspace)
 })
