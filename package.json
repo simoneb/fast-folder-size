@@ -27,7 +27,7 @@
     "https-proxy-agent": "^7.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.2.5",
+    "@types/node": "^22.7.4",
     "@types/tap": "^15.0.8",
     "eslint": "^8.41.0",
     "eslint-config-prettier": "^9.0.0",
