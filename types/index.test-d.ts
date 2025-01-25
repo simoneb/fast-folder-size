@@ -10,4 +10,13 @@ expectType<ChildProcess>(
   })
 )
 
+const signal = new AbortController().signal
+
+expectType<ChildProcess>(
+  fastFolderSize('.', { signal }, (err, bytes) => {
+    expectType<ExecException | null>(err)
+    expectType<number | undefined>(bytes)
+  })
+)
+
 expectType<number | undefined>(fastFolderSizeSync('.'))

@@ -48,6 +48,26 @@ const bytes = fastFolderSizeSync('.')
 console.log(bytes)
 ```
 
+#### Aborting
+
+The non-sync version of the API also supports `AbortSignal`, to abort the operation while in progress.
+
+```js
+const fastFolderSize = require('fast-folder-size')
+
+const controller = new AbortController()
+
+fastFolderSize('.', { signal: controller.signal }, (err, bytes) => {
+  if (err) {
+    throw err
+  }
+
+  console.log(bytes)
+})
+
+controller.abort()
+```
+
 ### Command line
 
 ```bash
