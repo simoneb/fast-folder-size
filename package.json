@@ -29,7 +29,7 @@
   "devDependencies": {
     "@types/node": "^22.7.4",
     "@types/tap": "^15.0.8",
-    "eslint": "^8.41.0",
+    "eslint": "^9.20.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.8.8",
