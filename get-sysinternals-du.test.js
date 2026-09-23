@@ -86,3 +86,39 @@ test('when process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION not found, then download
 
   subject.default(workspace)
 })
+
+test('extractDuZip copies only the known du.zip entries into bin', t => {
+  const bin = path.join(workspace, 'bin')
+
+  subject.extractDuZip(path.join(__dirname, 'fixtures', 'du.zip'), bin)
+
+  t.same(fs.readdirSync(bin).sort(), [
+    'Eula.txt',
+    'du.exe',
+    'du64.exe',
+    'du64a.exe',
+  ])
+  t.equal(fs.readFileSync(path.join(bin, 'du64.exe'), 'utf8'), 'fake du64.exe')
+  t.end()
+})
+
+test('extractDuZip never writes outside the destination (zip slip)', t => {
+  const bin = path.join(workspace, 'bin')
+  const outside = [
+    // relative to the destination
+    path.join(workspace, 'escaped.txt'),
+    path.join(workspace, 'escaped-via-link.txt'),
+    path.join(path.dirname(workspace), 'escaped-deeper.txt'),
+    // relative to the current directory, in case anything extracts there
+    path.join(process.cwd(), 'link'),
+    path.join(path.dirname(process.cwd()), 'escaped.txt'),
+  ]
+
+  subject.extractDuZip(path.join(__dirname, 'fixtures', 'zip-slip.zip'), bin)
+
+  t.same(fs.readdirSync(bin), ['du.exe'])
+  for (const file of outside) {
+    t.notOk(fs.existsSync(file), `${file} must not exist`)
+  }
+  t.end()
+})
