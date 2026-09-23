@@ -2,11 +2,43 @@ const fs = require('fs')
 const os = require('os')
 const https = require('https')
 const path = require('path')
-const decompress = require('decompress')
+const { execFileSync } = require('child_process')
 const { HttpsProxyAgent } = require('https-proxy-agent')
 
+// the only entries of DU.zip we need; nothing else is ever written into bin/
+const DU_ZIP_ENTRIES = ['du.exe', 'du64.exe', 'du64a.exe', 'Eula.txt']
+
+// the bsdtar shipped with Windows 10+ reads zip archives. use it by full path
+// so that a GNU tar found earlier on PATH (e.g. Git for Windows) isn't picked
+// up instead
+function windowsTar() {
+  return path.join(
+    process.env.SystemRoot || 'C:\\Windows',
+    'System32',
+    'tar.exe',
+  )
+}
+
+// tar is only ever asked to list the archive and to stream single entries to
+// stdout, never to write to disk: the files are written here, by name, into
+// destDir. entry paths, `..` components and links inside the archive can
+// therefore never decide where anything is written
+exports.extractDuZip = function (zipPath, destDir, tar = windowsTar()) {
+  const run = args => execFileSync(tar, args, { maxBuffer: 64 * 1024 * 1024 })
+
+  const entries = run(['-tf', zipPath]).toString().split(/\r?\n/)
+
+  fs.mkdirSync(destDir, { recursive: true })
+
+  for (const entry of DU_ZIP_ENTRIES) {
+    if (entries.includes(entry)) {
+      fs.writeFileSync(path.join(destDir, entry), run(['-xOf', zipPath, entry]))
+    }
+  }
+}
+
 exports.onDuZipDownloaded = function (tempFilePath, workspace) {
-  decompress(tempFilePath, path.join(workspace, 'bin'))
+  exports.extractDuZip(tempFilePath, path.join(workspace, 'bin'))
 }
 
 exports.downloadDuZip = function (mirror, workspace) {
@@ -27,7 +59,7 @@ exports.downloadDuZip = function (mirror, workspace) {
   console.log(`downloading du.zip from ${duZipLocation}`)
   if (!mirror) {
     console.log(
-      `if you have trouble while downloading, try set process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION to a proper mirror or local file path`
+      `if you have trouble while downloading, try set process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION to a proper mirror or local file path`,
     )
   }
 

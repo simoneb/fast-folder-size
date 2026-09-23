@@ -9,7 +9,7 @@
   "types": "types/index.d.ts",
   "author": "Simone Busoli <simone.busoli@gmail.com>",
   "scripts": {
-    "test": "tap && tsd",
+    "test": "node --test test.js get-sysinternals-du.test.js && tsd",
     "postinstall": "node get-sysinternals-du.js",
     "lint": "eslint ."
   },
@@ -23,17 +23,16 @@
   },
   "license": "AWISC",
   "dependencies": {
-    "decompress": "^4.2.1",
     "https-proxy-agent": "^7.0.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.5",
     "@types/node": "^22.7.4",
-    "@types/tap": "^15.0.8",
-    "eslint": "^8.41.0",
+    "eslint": "^9.39.5",
     "eslint-config-prettier": "^10.1.2",
-    "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^2.8.8",
-    "tap": "^16.3.4",
+    "eslint-plugin-prettier": "^5.5.6",
+    "globals": "^17.12.0",
+    "prettier": "^3.9.9",
     "tsd": "^0.33.0"
   }
 }
