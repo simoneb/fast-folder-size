@@ -22,7 +22,7 @@ function fastFolderSize(target, options, cb) {
       const bytes = processFn(stdout)
 
       cb(null, bytes)
-    }
+    },
   )
 }
 

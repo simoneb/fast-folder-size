@@ -15,7 +15,7 @@ function windowsTar() {
   return path.join(
     process.env.SystemRoot || 'C:\\Windows',
     'System32',
-    'tar.exe'
+    'tar.exe',
   )
 }
 
@@ -59,7 +59,7 @@ exports.downloadDuZip = function (mirror, workspace) {
   console.log(`downloading du.zip from ${duZipLocation}`)
   if (!mirror) {
     console.log(
-      `if you have trouble while downloading, try set process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION to a proper mirror or local file path`
+      `if you have trouble while downloading, try set process.env.FAST_FOLDER_SIZE_DU_ZIP_LOCATION to a proper mirror or local file path`,
     )
   }
 
